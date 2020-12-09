@@ -1,15 +1,20 @@
 import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 
-function Search({ searchForUsers, clearUsers, showClearButton }) {
+function Search({ searchForUsers, clearUsers, showClearButton, setAlert }) {
   const [searchText, setSearchText] = useState("");
 
   const handleSearchTextChanged = (e) => setSearchText(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    searchForUsers(searchText);
-    setSearchText("");
+    if (searchText === "") {
+      console.log("in handleSubmit");
+      setAlert("Please enter text", "light");
+    } else {
+      searchForUsers(searchText);
+      setSearchText("");
+    }
   };
 
   return (
@@ -30,11 +35,11 @@ function Search({ searchForUsers, clearUsers, showClearButton }) {
           id="search"
         />
       </form>
-      {showClearButton ? (
+      {showClearButton && (
         <button className="btn btn-light btn-block" onClick={clearUsers}>
           Clear
         </button>
-      ) : null}
+      )}
     </Fragment>
   );
 }
