@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "axios": "^0.21.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
@@ -31,10 +32,16 @@
     "rules": {
       "react/prop-types": 0,
       "no=console": 0,
+      "no-unused-vars": 1,
       "react-hooks/rules-of-hooks": 2,
       "react-hooks/exhaustive-deps": 1
     },
-    "plugins": ["react", "import", "jsx-a11y", "react-hooks"],
+    "plugins": [
+      "react",
+      "import",
+      "jsx-a11y",
+      "react-hooks"
+    ],
     "parserOptions": {
       "ecmaVersion": 2018,
       "sourceType": "module",
@@ -53,11 +60,15 @@
       },
       "import/resolver": {
         "node": {
-          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+          "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx"
+          ]
         }
       }
     }
- 
   },
   "browserslist": {
     "production": [
@@ -70,5 +81,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-config-prettier": "^7.0.0"
   }
 }
