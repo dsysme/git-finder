@@ -9,7 +9,6 @@ function Search({ searchForUsers, clearUsers, showClearButton, setAlert }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (searchText === "") {
-      console.log("in handleSubmit");
       setAlert("Please enter text", "light");
     } else {
       searchForUsers(searchText);

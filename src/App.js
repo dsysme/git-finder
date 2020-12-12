@@ -14,7 +14,8 @@ class App extends Component {
     users: [],
     loading: false,
     alert: null,
-    user: "",
+    user: {},
+    userRepos: [],
   };
 
   searchForUsers = async (searchText) => {
@@ -27,6 +28,22 @@ class App extends Component {
     this.setState({ loading: false, users: res.data.items });
   };
 
+  clearUser = () => this.setState({ user: {}, userRepos: [] });
+
+  getUser = async (username) => {
+    const user = await axions.get(
+      `https://api.github.com/users/${username}?client_id=
+      ${process.env.REACT_APP_GITHUB_CLIENT_ID}
+      &client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    const userRepos = await axions.get(
+      `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=
+        ${process.env.REACT_APP_GITHUB_CLIENT_ID}
+        &client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    this.setState({ user: user.data, userRepos: userRepos.data });
+  };
+
   setAlert = (msg, type) => {
     console.log("in set alert");
     this.setState({ alert: { msg, type } });
@@ -34,8 +51,6 @@ class App extends Component {
   };
 
   clearUsers = () => this.setState({ users: [], loading: false });
-
-  setCurrentUser = (username) => this.setState({ user: username });
 
   render() {
     return (
@@ -67,7 +82,15 @@ class App extends Component {
               <Route
                 exact
                 path="/user/:username"
-                render={(props) => <User />}
+                render={(props) => (
+                  <User
+                    getUser={this.getUser}
+                    user={this.state.user}
+                    clearUser={this.clearUser}
+                    getUserRepos={this.getUserRepos}
+                    userRepos={this.state.userRepos}
+                  />
+                )}
               />
             </Switch>
           </div>

@@ -1,28 +1,18 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import Spinner from "../layout/Spinner";
-import axions from "axios";
+import PropTypes from "prop-types";
+import Repos from "../repos/Repos";
 
-function User() {
-  const [user, setUser] = useState(null);
-
+function User({ getUser, clearUser, user, userRepos }) {
   const { username } = useParams();
 
   useEffect(() => {
-    const getUser = async (username) => {
-      console.log(`fetching user ${username}`);
-      const res = await axions.get(
-        `https://api.github.com/users/${username}?client_id=
-        ${process.env.REACT_APP_GITHUB_CLIENT_ID}
-        &client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-      );
-      console.log(`user fetched: ${res.data}`);
-      setUser(res.data);
-    };
     getUser(username);
-  }, [username]);
+    return clearUser;
+  }, [username, getUser, clearUser]);
 
-  if (user === null) {
+  if (Object.keys(user).length === 0) {
     return <Spinner />;
   } else {
     const {
@@ -105,9 +95,19 @@ function User() {
           <div className="badge badge-light">Repos: {public_repos}</div>
           <div className="badge badge-dark">Gists: {public_gists}</div>
         </div>
+        <div className="card">
+          {userRepos.length && <Repos userRepos={userRepos} />}
+        </div>
       </Fragment>
     );
   }
 }
+
+User.propTypes = {
+  getUser: PropTypes.func.isRequired,
+  clearUser: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  repos: PropTypes.array.isRequired,
+};
 
 export default User;
