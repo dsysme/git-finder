@@ -1,18 +1,20 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import Spinner from "../layout/Spinner";
-import PropTypes from "prop-types";
 import Repos from "../repos/Repos";
+import GithubContext from "../../context/github/githubContext";
 
-function User({ getUser, clearUser, user, userRepos }) {
+function User() {
   const { username } = useParams();
+  const githubContext = useContext(GithubContext);
 
   useEffect(() => {
-    getUser(username);
-    return clearUser;
-  }, [username, getUser, clearUser]);
+    githubContext.getUser(username);
+    githubContext.getUserRepos(username);
+    // eslint-disable-next-line
+  }, []);
 
-  if (Object.keys(user).length === 0) {
+  if (githubContext.loading) {
     return <Spinner />;
   } else {
     const {
@@ -29,7 +31,7 @@ function User({ getUser, clearUser, user, userRepos }) {
       public_repos,
       public_gists,
       hireable,
-    } = user;
+    } = githubContext.user;
     return (
       <Fragment>
         <div className="card grid-2">
@@ -96,18 +98,13 @@ function User({ getUser, clearUser, user, userRepos }) {
           <div className="badge badge-dark">Gists: {public_gists}</div>
         </div>
         <div className="card">
-          {userRepos.length && <Repos userRepos={userRepos} />}
+          {githubContext.repos.length && (
+            <Repos userRepos={githubContext.repos} />
+          )}
         </div>
       </Fragment>
     );
   }
 }
-
-User.propTypes = {
-  getUser: PropTypes.func.isRequired,
-  clearUser: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-  repos: PropTypes.array.isRequired,
-};
 
 export default User;
